@@ -1,0 +1,35 @@
+.tracklist {
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    flex-wrap: wrap;
+}
+
+.trackcard {
+    display: flex;
+    width: 29.5%;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 15px;
+    background: linear-gradient(#e0fcd7af, #1a852c);
+}
+.trackname {
+    flex: 1;
+    padding: 5px;
+    border: none;
+    font-size: 20px;
+}
+.icon {
+    margin-left: 10px;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .tracklist {
+        width: 95%;
+    }
+    .trackcard {
+        width: 100%;
+    }
+}

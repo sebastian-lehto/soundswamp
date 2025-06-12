@@ -2,6 +2,7 @@ import './App.css';
 import { useState, useEffect } from "react";
 import AudioUploader from './components/AudioUploader';
 import { Track } from './model';
+import TrackList from './components/TrackList';
 
 
 const App: React.FC = () => {
@@ -25,7 +26,7 @@ const App: React.FC = () => {
       <AudioUploader handleChange={handleChange}/>
       <p>{track ? `File name: ${track.file.name}` : "no files uploaded yet"}</p>
       <div className='tracklist'>
-        <ul>{tracks.map(track => <li>{track.name}</li>)}</ul>
+        <TrackList tracks={tracks}/>
       </div>
     </div>
   );
