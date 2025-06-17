@@ -10,13 +10,13 @@ const App: React.FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
 
   const handleChange = (fileList:any) => {
-    const newTrack:Track = {id: Date.now(), file: fileList[0], name: fileList[0].name}
+    const newTrack:Track = {id: Date.now(), file: fileList[0], isPLaying: false, name: fileList[0].name}
     setTrack(newTrack);
   };
 
   useEffect(() => {
     if (track) {
-      setTracks([track, ...tracks])
+      setTracks(t => [track, ...t])
     }
   }, [track]);
 
@@ -24,9 +24,8 @@ const App: React.FC = () => {
     <div className="App">
       <span className='heading'>soundswamp</span>
       <AudioUploader handleChange={handleChange}/>
-      <p>{track ? `File name: ${track.file.name}` : "no files uploaded yet"}</p>
       <div className='tracklist'>
-        <TrackList tracks={tracks}/>
+        <TrackList tracks={tracks} setTracks={setTracks}/>
       </div>
     </div>
   );

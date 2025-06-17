@@ -6,13 +6,14 @@ import TrackCard from "./TrackCard";
 
 interface Props {
     tracks: Track[];
+    setTracks: React.Dispatch<React.SetStateAction<Track[]>>;
 }
 
-const TrackList:React.FC<Props> = ({tracks}) => {
+const TrackList:React.FC<Props> = ({tracks, setTracks}) => {
     return (
         <div className="tracklist">
             {tracks.map((track) => (
-                <TrackCard track={track}/>
+                <TrackCard track={track} tracks={tracks} setTracks={setTracks}/>
             ))}
         </div>
     );
