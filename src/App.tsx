@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import AudioUploader from './components/AudioUploader';
 import { Track } from './model';
 import TrackList from './components/TrackList';
+import NavBar from './components/NavBar';
 
 
 const App: React.FC = () => {
@@ -22,7 +23,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <span className='heading'>soundswamp</span>
+      <NavBar></NavBar>
       <AudioUploader handleChange={handleChange}/>
       <div className='tracklist'>
         <TrackList tracks={tracks} setTracks={setTracks}/>

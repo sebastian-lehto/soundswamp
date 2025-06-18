@@ -11,7 +11,7 @@
     border-radius: 5px;
     padding: 20px;
     margin-top: 15px;
-    background: linear-gradient(#e0fcd7af, #1a852c);
+    background: linear-gradient(#e6dacbaf, beige);
 }
 #trackPlaying {
     display: flex;
@@ -42,6 +42,38 @@
     cursor: pointer;
 }
 
+.navbar {
+    display: flex;
+    width: 100vw;
+    background-color: beige;
+}
+
+.nav {
+    display: contents;
+    width: 100%;
+}
+.navitem {
+    display: flex;
+    justify-content: center;
+    width: 29.5%;
+    padding: 20px;
+    font-size: 40px;
+    color: beige;
+    background: linear-gradient(#0c490c );
+}
+
+.navitem:hover {
+    font-style: oblique;
+    color: beige;
+    background: linear-gradient(#0c490c, #175e17);
+}
+
+.title {
+    text-transform: uppercase;
+    font-size: 40px;
+    color: beige;
+    text-align: center;
+}
 @media (max-width: 900px) {
     .tracklist {
         width: 95%;

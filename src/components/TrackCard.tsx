@@ -18,17 +18,16 @@ const TrackCard:React.FC<Props> = ({track, tracks, setTracks}) => {
         setTracks(tracks.map((track) => 
             track.id === id ? {...track, isPLaying: !track.isPLaying} : {...track, isPLaying: false})
         )
-    };
+    }
+
     const handleDelete = (id: number) => {
         setTracks(tracks.filter((track) => track.id !== id))
     }
     const handleEdit = (e: React.FormEvent, id: number) => {
         e.preventDefault();
-
         setTracks(
             tracks.map((track) => track.id === id ? {...track, name: editName} : track)
         );
-
         setEdit(false)
     }
 
