@@ -74,6 +74,36 @@
     color: beige;
     text-align: center;
 }
+
+.login-container {
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 29.5vw;
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(#e6dacbaf, beige);
+    
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 15px;
+    background: linear-gradient(#e6dacbaf, beige);
+}
+
+.login-submit {
+    display: flex;
+    width: 100%;
+    border-radius: 5px;
+    padding: 15px;
+    background: linear-gradient(#e6dacbaf, beige);
+    cursor: pointer;
+}
+
 @media (max-width: 900px) {
     .tracklist {
         width: 95%;
