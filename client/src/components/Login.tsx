@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import "../App.css";
 import "./styles.css";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -14,21 +14,27 @@ const Login: React.FC<Props> = () => {
     const [password, setPassword] = useState<string>();
     const navigate = useNavigate();
 
-    const handleClick: any = (e:MouseEvent) => {
+    const handleClick: (e: MouseEvent) => void = (e:MouseEvent) => {
         e.preventDefault();
 
         const data = {username, password};
-        fetch('http://localhost:5000/user', {
-          method: 'POST',
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(data)
+        fetch('http://localhost:5000/auth/login', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
         })
         .then((res) => res.json())
         .then((data) => {
-          if (data.username) navigate("/");
-        })
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                navigate("/");
+            } else {
+                console.error(data.message)
+                navigate("/login");
+            }})
         .catch((err) => {
-            console.log('Error occurred', err)
+            console.log(err.message)
+            window.location.reload()
         });
     }
 

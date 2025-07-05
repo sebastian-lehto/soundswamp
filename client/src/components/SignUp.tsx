@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../App.css";
 import "./styles.css";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
 
@@ -12,18 +13,29 @@ const Signup: React.FC<Props> = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [passwordAgain, setPasswordAgain] = useState<string>("");
+    const navigate = useNavigate();
     
     const handleClick: any = (e:any) => {
         e.preventDefault()
         var data = {username, email, password}
 
-        fetch('http://localhost:5000/users', {
+        fetch('http://localhost:5000/auth/signup', {
           method: 'POST',
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(data)
         })
-        .then((res) => console.log(res))
-        .catch((err) => console.log('Error occurred', err))
+        .then((res) => res.json())
+        .then(data => {
+            if (data.token) {
+                console.log("SIGNED UP")
+                localStorage.setItem('token', data.token) 
+                navigate("/login") 
+            } else window.location.reload()
+        })
+        .catch((err) => {
+            console.log('Error occurred', err);
+            window.location.reload();
+        })
 
 
     };
