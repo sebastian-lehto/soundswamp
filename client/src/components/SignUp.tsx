@@ -85,9 +85,11 @@ const Signup: React.FC<Props> = () => {
                             onChange={(e) => setPasswordAgain(e.target.value)}
                             />
                     </div>
-                    <div className="login submit">
-                        <button type="submit" onClick={(e) => handleClick(e)}>Sign Up</button>
-
+                    <div className="button">
+                        <a type="submit" onClick={(e) => handleClick(e)}>Sign Up</a>
+                    </div>
+                    <div className="button" onClick={() => navigate("/login")}>
+                        <p>Back To Log In</p>
                     </div>
                 </div>
             </form>

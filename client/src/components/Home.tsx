@@ -4,11 +4,13 @@ import AudioUploader from './AudioUploader';
 import { Track } from '../model';
 import TrackList from './TrackList';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [track, setTrack] = useState<Track>();
   const [tracks, setTracks] = useState<Track[]>([]);
   const token:string = localStorage.getItem("token") || "";
+  const navigate = useNavigate();
 
   const handleChange = (fileList:any) => {
     const formData = new FormData()

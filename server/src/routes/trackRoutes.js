@@ -1,5 +1,4 @@
 const express = require('express');
-const pool = require("../db");
 const path = require('path');
 const fs = require("fs");
 
