@@ -27,7 +27,6 @@ const Signup: React.FC<Props> = () => {
         .then((res) => res.json())
         .then(data => {
             if (data.token) {
-                console.log("SIGNED UP")
                 localStorage.setItem('token', data.token) 
                 navigate("/login") 
             } else window.location.reload()

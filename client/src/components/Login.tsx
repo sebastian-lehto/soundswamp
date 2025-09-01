@@ -2,6 +2,7 @@ import { useState, MouseEvent } from "react";
 import "../App.css";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 
 
 
@@ -13,6 +14,7 @@ const Login: React.FC<Props> = () => {
     const [username, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleClick: (e: MouseEvent) => void = (e: MouseEvent) => {
         e.preventDefault();
@@ -26,7 +28,7 @@ const Login: React.FC<Props> = () => {
             .then((res) => res.json())
             .then(async (data) => {
                 if (data.token) {
-                    await localStorage.setItem('token', data.token);
+                    login(data.token);
                     navigate("/");
                 } else {
                     console.error(data.message);

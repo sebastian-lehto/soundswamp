@@ -16,14 +16,8 @@ router.post("/signup", async (req, res) => {
                 password: hashedPassword
             }
         });
-        
-        /* 
-        const newUser = await pool.query(
-            "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *",
-            [username, email, hashedPassword]
-        ); */
 
-        const user_id = newUser.user_id;
+        const user_id = newUser.id;
         const token = jwt.sign({ id: user_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         res.json({ token })
@@ -42,18 +36,13 @@ router.post("/login", async (req, res) => {
                 username
             }
         })
-
-        /* 
-        const userFound = await pool.query(
-            "SELECT * FROM users WHERE username=$1",
-            [username]
-        ); */
+        
         if (!userFound) return res.status(404).send({ message: "User not found" })
 
         const passwordIsValid = bcrypt.compareSync(password, userFound.password)
         if (!passwordIsValid) return res.status(404).send({ message: "Password incorrect" });
 
-        const token = jwt.sign({ id: userFound.user_id }, process.env.JWT_SECRET, {expiresIn: '24h'});
+        const token = jwt.sign({ id: userFound.id }, process.env.JWT_SECRET, {expiresIn: '24h'});
         res.json({ token });
     } catch (err) {
         console.error(err.message);

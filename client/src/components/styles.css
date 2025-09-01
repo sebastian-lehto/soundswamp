@@ -13,6 +13,29 @@
     margin-top: 15px;
     background: linear-gradient(#e6dacbaf, beige);
 }
+
+.userlist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 90%;
+    flex-wrap: nowrap;
+}
+
+.usercard {
+    display: inline-block;
+    flex: 1;
+    width: 29.5%;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px;
+    background: rgba(245, 245, 220, 0.363);
+}
+
+.usercard:hover {
+    background: rgba(9, 83, 7, 0.363);
+}
+
 #trackPlaying {
     display: flex;
     width: 29.5%;
@@ -22,12 +45,14 @@
     background: linear-gradient(#032909, #002005);
     color: beige;
 }
+
 .trackname {
     flex: 1;
     padding: 5px;
     border: none;
     font-size: 20px;
 }
+
 .trackedit {
     flex: 1;
     padding: 5px;
@@ -36,6 +61,7 @@
     font-size: 20px;
     opacity: 70%;
 }
+
 .icon {
     margin-left: 10px;
     font-size: 25px;
@@ -52,6 +78,7 @@
     display: contents;
     width: 100%;
 }
+
 .navitem {
     display: flex;
     justify-content: center;
@@ -59,7 +86,7 @@
     padding: 20px;
     font-size: 40px;
     color: beige;
-    background: linear-gradient(#0c490c );
+    background: linear-gradient(#0c490c);
 }
 
 .navitem:hover {
@@ -84,7 +111,7 @@
     height: 100%;
     border-radius: 15px;
     background: linear-gradient(#e6dacbaf, beige);
-    
+
 }
 
 .login {
@@ -106,7 +133,7 @@
 
 .button:hover {
     background: linear-gradient(#e6dacbaf, #beb4a6af);
-    
+
 }
 
 input {
@@ -115,15 +142,19 @@ input {
     margin-left: 10px;
 }
 
-a, a:visited, a:hover, a:active {
-  color: inherit;
-  text-decoration: none;
+a,
+a:visited,
+a:hover,
+a:active {
+    color: inherit;
+    text-decoration: none;
 }
 
 @media (max-width: 900px) {
     .tracklist {
         width: 95%;
     }
+
     .trackcard {
         width: 100%;
     }

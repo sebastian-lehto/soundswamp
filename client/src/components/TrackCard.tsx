@@ -16,18 +16,18 @@ const TrackCard:React.FC<Props> = ({track, tracks, setTracks}) => {
     const audioRef = useRef<HTMLAudioElement>(null);
 
     const handlePlay = (id: number) => {
-        if (!track.isPLaying) audioRef.current?.play();
+        if (!track.isPlaying) audioRef.current?.play();
         setTracks(tracks.map((track) => 
-            track.id === id ? {...track, isPLaying: !track.isPLaying} : {...track, isPLaying: false})
+            track.id === id ? {...track, isPlaying: !track.isPlaying} : {...track, isPlaying: false})
         )
         
     }
     useEffect(() => {
-        if (!track.isPLaying) {
+        if (!track.isPlaying) {
             audioRef.current?.pause()
             if (audioRef.current) audioRef.current.currentTime = 0;
         }
-    }, [track.isPLaying])
+    }, [track.isPlaying])
 
     const handleDelete = (id: number) => {
         setTracks(tracks.filter((track) => track.id !== id))
@@ -48,7 +48,7 @@ const TrackCard:React.FC<Props> = ({track, tracks, setTracks}) => {
     }, [edit, track.name]);
 
     return (
-        <form className="trackcard" id={track.isPLaying ? "trackPlaying" : ""} onSubmit={(e) => handleEdit(e, track.id)}>
+        <form className="trackcard" id={track.isPlaying ? "trackPlaying" : ""} onSubmit={(e) => handleEdit(e, track.id)}>
             {edit ? (
                 <input 
                     ref= {inputRef}
@@ -61,7 +61,7 @@ const TrackCard:React.FC<Props> = ({track, tracks, setTracks}) => {
             )}
             <audio ref={audioRef} src={track.file}></audio>
             <span className="icon" onClick={() => handlePlay(track.id)}>
-                {track.isPLaying ? <AiTwotonePauseCircle /> : <AiTwotonePlayCircle />}
+                {track.isPlaying ? <AiTwotonePauseCircle /> : <AiTwotonePlayCircle />}
             </span>
             <span className="icon" onClick={() => handleDelete(track.id)}>
                 <AiTwotoneDelete />

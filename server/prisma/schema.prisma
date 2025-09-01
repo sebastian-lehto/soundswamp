@@ -14,8 +14,75 @@ datasource db {
 }
 
 model User {
-  id        Int         @id @default(autoincrement())
-  username  String      @unique
-  email     String      @unique
-  password  String
+  id                    Int             @id @default(autoincrement())
+  username              String          @unique
+  email                 String          @unique
+  password              String
+  bio                   String?
+  public                Boolean         @default(true)
+  createdAt             DateTime        @default(now())
+
+  tracksCreated         Track[]         @relation("TrackCreator")
+  groupsCreated         Group[]         @relation("GroupCreator")
+  groupMemberships      GroupMembership[]
+  sentFriendships       Friendship[]    @relation("User1")
+  receivedFriendships   Friendship[]    @relation("User2")  
+}
+
+model Track {
+  id                    Int             @id @default(autoincrement())
+  name                  String
+  fileLocation          String          @unique
+  description           String?
+  genres                String[]
+  tags                  String[]
+  public                Boolean         @default(true)
+  createdAt             DateTime        @default(now())
+
+  creator               User            @relation("TrackCreator", fields: [creatorId], references: [id])
+  creatorId             Int
+
+  group                 Group?          @relation(fields: [groupId], references: [id])
+  groupId               Int?
+}
+
+model Group {
+  id                    Int             @id @default(autoincrement())
+  name                  String
+  description           String?
+  createdAt             DateTime        @default(now())
+
+  creator               User            @relation("GroupCreator", fields: [creatorId], references: [id])
+  creatorId             Int
+
+  memberships           GroupMembership[]
+  groupTracks           Track[]
+}
+
+
+model GroupMembership {
+  membershipId          Int             @id @default(autoincrement())
+  joinedAt              DateTime        @default(now())
+  role                  String          @default("member")
+
+  user                  User            @relation(fields: [userId], references: [id])
+  userId                Int
+
+  group                 Group           @relation(fields: [groupId], references: [id])
+  groupId               Int
+}
+
+model Friendship {
+  id                    Int             @id @default(autoincrement())
+  status                String          @default("pending")
+  requestedAt           DateTime        @default(now())
+  acceptedAt            DateTime?
+
+  user1                 User            @relation("User1", fields: [user1Id], references: [id])
+  user1Id               Int
+
+  user2                 User            @relation("User2", fields: [user2Id], references: [id])
+  user2Id               Int
+
+  @@unique([user1Id, user2Id])
 }
