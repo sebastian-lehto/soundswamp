@@ -44,8 +44,9 @@ const Home: React.FC = () => {
   const handleChange = async (fileList: FileList) => {
     if (!fileList.length) return;
     const formData = new FormData();
+    const name = fileList[0].name;
     formData.append("file", fileList[0]);
-    formData.append("name", fileList[0].name);
+    formData.append("name", name);
     try {
       await fetch('http://localhost:5000/api/upload', {
         method: 'POST',
