@@ -8,7 +8,6 @@ interface Props {
 
 const PrivateRoute: React.FC<Props> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-
   return isAuthenticated ? <>{children}</> : <Navigate to="/signup" />;
 };
 

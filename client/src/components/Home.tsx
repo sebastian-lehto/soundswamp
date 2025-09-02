@@ -53,11 +53,6 @@ const Home: React.FC = () => {
         headers: { 'Authorization': token },
         body: formData
       });
-      await fetch('http://localhost:5000/tracks/newTrack', {
-        method: 'POST',
-        headers: { 'Authorization': token, "Content-Type": "application/json" },
-        body: JSON.stringify({ name })
-      });
       fetchTracks(); // Refresh track list
     } catch (err) {
       console.error('Error occurred', err);

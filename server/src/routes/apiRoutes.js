@@ -17,7 +17,8 @@ const upload = multer({ storage });
 
 router.post('/upload', upload.single('file'), async (req, res) => {
     try {
-        const {name, genres, tags, userId} = req.body;
+        const userId = req.userId;
+        const {name, genres, tags} = req.body;
         const fileLocation = `./src/uploads/${name}`
         const creatorId = parseInt(userId)
 

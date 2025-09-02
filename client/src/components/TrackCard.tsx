@@ -14,6 +14,7 @@ const TrackCard:React.FC<Props> = ({track, tracks, setTracks}) => {
     const [edit, setEdit] = useState<boolean>(false);
     const [editName, setEditName] = useState<string>(track.name);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const token: string = localStorage.getItem("token") || "";
 
     const handlePlay = (id: number) => {
         if (!track.isPlaying) audioRef.current?.play();
@@ -31,6 +32,16 @@ const TrackCard:React.FC<Props> = ({track, tracks, setTracks}) => {
 
     const handleDelete = (id: number) => {
         setTracks(tracks.filter((track) => track.id !== id))
+        const trackname = track.name
+
+        fetch('http://localhost:5000/tracks/track', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json', 
+            'Authorization': token 
+          },
+          body: JSON.stringify({ trackname }),
+        })
     }
     const handleEdit = (e: React.FormEvent, id: number) => {
         e.preventDefault();

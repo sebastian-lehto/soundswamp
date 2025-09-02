@@ -19,22 +19,39 @@ router.get('/track', (req, res) => {
     });
 });
 
-router.get('/tracklist', (req, res) => {
-    const directoryPath = path.join(__dirname, "../uploads")
-    fs.readdir(directoryPath, (err, files) => {
-        if (err) {
-            return console.log("Unable to scan directory: " + err)
-        }
-        res.send(JSON.stringify(files));
-        res.end();
+router.delete('/track', (req, res) => {
+    console.log(req.body);
+    const { trackname } = req.body;
+    const filePath = path.join( "./src/uploads/" + trackname);
+
+    prisma.track.deleteMany({
+        where: { name: trackname }
+    }).then(() => {
+        console.log("Track deleted from db")
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+                res.sendStatus(500);
+            } else {
+                console.log('File deleted:', trackname);
+                res.sendStatus(200);
+            }
+        });
     });
+});
+
+router.get('/tracklist', async (req, res) => {
+    const allTracks = await prisma.track.findMany();
+    const tracknames = allTracks.map(track => track.name);
+    res.json(tracknames);
+    res.end();
 })
 
 router.post('/newTrack', async (req, res) => {
     try {
         const { name } = req.body;
         const userId = req.userId;
-        console.log("USERID : " + userId)
+        console.log('Creating new track:', name, 'for user ID:', userId);
         const fileLocation = '../uploads/' + name;
 
         const newTrack = await prisma.track.create({
