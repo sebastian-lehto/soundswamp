@@ -35,12 +35,12 @@ jobs:
       - name: Wait for services to be ready
         run: |
           sleep 20
-          docker-compose ps
+          docker-compose -f docker-compose.ci.yaml ps
 
       - name: Run Cypress tests
         run: |
-          docker-compose exec -T client npx cypress run --config-file cypress.config.ts
+          docker-compose -f docker-compose.ci.yaml exec -T client npx cypress run --config-file cypress.config.ts
 
       - name: Stop containers
         if: always()
-        run: docker-compose down
+        run: docker-compose -f docker-compose.ci.yaml down
