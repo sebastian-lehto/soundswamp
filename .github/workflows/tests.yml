@@ -24,7 +24,7 @@ jobs:
 
       - name: Build and start containers
         run: |
-          docker-compose -f docker-compose.yaml up -d --build
+          docker-compose -f docker-compose.ci.yaml up -d --build
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
