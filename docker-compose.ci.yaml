@@ -1,7 +1,9 @@
+version: '3.8'
+
 services:
   server:
     build: ./server
-    container_name: soundswamp-app
+    container_name: soundswamp-server
     environment:
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
@@ -11,18 +13,18 @@ services:
       - "5000:5000"
     depends_on:
       - db
-    volumes:
-      - ./server:/app
+
   client:
     build: ./client
+    container_name: soundswamp-client
+    environment:
+      CHOKIDAR_USEPOLLING: true
     ports:
       - "3000:3000"
-    stdin_open: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./client:/app
-    command: tail -f /dev/null
+    command: tail -f /dev/null   # keep container alive for CI
+    depends_on:
+      - server
+
   db:
     image: postgres:13-alpine
     container_name: postgres-db

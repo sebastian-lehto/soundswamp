@@ -31,11 +31,8 @@ jobs:
           sleep 20
           docker compose --env-file .env.ci -f docker-compose.ci.yaml ps
 
-      - name: Check running containers
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml ps
-
-      - name: Debug client container
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client sh -c "ls node_modules/cypress"
+      - name: Verify Cypress installation
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client npx cypress --version
 
       - name: Run Cypress tests
         run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client npx cypress run --headless --browser chrome
