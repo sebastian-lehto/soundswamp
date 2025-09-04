@@ -22,20 +22,26 @@ jobs:
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.ci
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.ci
 
-      - name: Build and start containers
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build
+      - name: Build and start server & database containers
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server db
 
       - name: Wait for services to be ready
         run: |
-          echo "Waiting for server and client to be ready..."
+          echo "Waiting for server and database to be ready..."
           sleep 20
           docker compose --env-file .env.ci -f docker-compose.ci.yaml ps
 
-      - name: Verify Cypress installation
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client npx cypress --version
-
-      - name: Run Cypress tests
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client npx cypress run --headless --browser chrome
+      - name: Run Cypress tests in official Docker image
+        run: |
+          docker run --rm \
+            -v $PWD/client:/e2e \
+            -w /e2e \
+            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+            -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+            -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
+            cypress/included:14.5.4
 
       - name: Stop containers
         if: always()
