@@ -23,6 +23,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./client:/app
+    command: tail -f /dev/null
   db:
     image: postgres:13-alpine
     container_name: postgres-db
