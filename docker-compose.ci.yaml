@@ -14,7 +14,15 @@ services:
       - db
     volumes:
       - ./server:/app
-
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./client:/app
   db:
     image: postgres:13-alpine
     container_name: postgres-db
