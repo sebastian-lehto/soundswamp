@@ -21,7 +21,7 @@ const UserList: React.FC = () => {
     }, []);
 
     return (
-        <div className="userlist">
+        <div className="App userlist">
             {users.map((user) => (
                 <UserCard key={user.id} data={user} />
             ))}

@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState, FormEvent } from "react";
 import "../App.css";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ const Login: React.FC<Props> = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    const handleClick: (e: MouseEvent) => void = (e: MouseEvent) => {
+    const handleSubmit: (e: FormEvent) => void = (e: FormEvent) => {
         e.preventDefault();
 
         const data = { username, password };
@@ -45,7 +45,7 @@ const Login: React.FC<Props> = () => {
     return (
         <div className="App">
             <h2>Log In</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className="login-container">
                     <div className="login">
                         <strong>Username: </strong>
@@ -60,7 +60,7 @@ const Login: React.FC<Props> = () => {
                     <div className="login">
                         <strong>Password: </strong>
                         <input
-                            type="text"
+                            type="password"
                             placeholder="Enter Password"
                             autoComplete="off"
                             className="password-input"
@@ -68,10 +68,10 @@ const Login: React.FC<Props> = () => {
                         />
                     </div>
                     <div className="button">
-                        <a type="submit" onClick={(e) => handleClick(e)}>Log In</a>
+                        <button type="submit">Log In</button>
                     </div>
-                    <div className="button" onClick={() => navigate("/signup")}>
-                        <p>Back To Sign Up</p>
+                    <div className="button">
+                        <button onClick={() => navigate("/signup")}>To Sign Up</button>
                     </div>
                 </div>
             </form>

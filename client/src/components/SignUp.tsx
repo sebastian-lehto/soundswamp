@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import "../App.css";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +15,13 @@ const Signup: React.FC<Props> = () => {
     const [passwordAgain, setPasswordAgain] = useState<string>("");
     const navigate = useNavigate();
     
-    const handleClick: any = (e:any) => {
+    const handleSubmit: (e: FormEvent) => void = (e: FormEvent) => {
         e.preventDefault()
         var data = {username, email, password}
+        if (password !== passwordAgain) {
+            alert("Passwords do not match");
+            return;
+        }
 
         fetch('http://localhost:5000/auth/signup', {
           method: 'POST',
@@ -42,7 +46,7 @@ const Signup: React.FC<Props> = () => {
     return (
         <div className="App">
             <h2>Sign Up</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className="login-container">
                     <div className="login">
                         <strong>Username: </strong>
@@ -67,7 +71,7 @@ const Signup: React.FC<Props> = () => {
                     <div className="login">
                         <strong>Password: </strong>
                         <input 
-                            type="text"
+                            type="password"
                             placeholder="Enter Password"
                             autoComplete="off"
                             className="password-input"
@@ -77,7 +81,7 @@ const Signup: React.FC<Props> = () => {
                     <div className="login">
                         <strong>Password Again: </strong>
                         <input 
-                            type="text"
+                            type="password"
                             placeholder="Enter Password Again"
                             autoComplete="off"
                             className="password-again-input"
@@ -85,10 +89,10 @@ const Signup: React.FC<Props> = () => {
                             />
                     </div>
                     <div className="button">
-                        <a type="submit" onClick={(e) => handleClick(e)}>Sign Up</a>
+                        <button type="submit" >Sign Up</button>
                     </div>
-                    <div className="button" onClick={() => navigate("/login")}>
-                        <p>Back To Log In</p>
+                    <div className="button">
+                        <button onClick={() => navigate("/login")}>To Log In</button>
                     </div>
                 </div>
             </form>

@@ -8,13 +8,29 @@
   
 }
 
-.fileuploader {
-  margin-top: 50px;
-  width: 25vw;
-  background-color: beige;
+.dropzone {
+  margin: 50px;
+  padding: 20px;
+  font-size: 20px;
+  color: beige;
+  background: linear-gradient(#023502);
   border-radius: 10px;
+  cursor: pointer;
+}
+
+.dropzone:hover {
+  background: linear-gradient(#012401, #0c490c);
+}
+
+.accept {
+  background: linear-gradient(#001a00, #023502);
+}
+
+.reject {
+  background: linear-gradient(#4d0000, #800000);
+}
 
 .tracklist {
   background-color: beige;
 }
-}
+

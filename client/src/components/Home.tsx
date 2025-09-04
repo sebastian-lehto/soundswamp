@@ -8,8 +8,8 @@ import NavBar from './NavBar';
 const Home: React.FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(false);
-  const token: string = localStorage.getItem("token") || "";
   const [error, setError] = useState<string | null>(null);
+  const token: string = localStorage.getItem("token") || "";
 
   const fetchTracks = async () => {
     setLoading(true);
@@ -32,6 +32,7 @@ const Home: React.FC = () => {
         } as Track;
       });
       const trackObjs = await Promise.all(trackPromises);
+      setTracks([]);
       setTracks(trackObjs);
     } catch (err) {
       setError('Failed to load tracks.');

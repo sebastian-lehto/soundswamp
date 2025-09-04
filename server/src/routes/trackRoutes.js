@@ -45,30 +45,9 @@ router.get('/tracklist', async (req, res) => {
     const tracknames = allTracks.map(track => track.name);
     res.json(tracknames);
     res.end();
-})
-
-router.post('/newTrack', async (req, res) => {
-    try {
-        const { name } = req.body;
-        const userId = req.userId;
-        console.log('Creating new track:', name, 'for user ID:', userId);
-        const fileLocation = '../uploads/' + name;
-
-        const newTrack = await prisma.track.create({
-            data: {
-                name,
-                creatorId: userId,
-                fileLocation
-            }
-        });
-        res.json({ newTrack })
-    } catch (err) {
-        console.error(err.message);
-        res.sendStatus(503);
-    }
 });
 
-router.get('/tracksFor/:id', async (req, res) => {
+router.get('/tracklist/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     try {
         const tracks = await prisma.track.findMany({
@@ -76,7 +55,8 @@ router.get('/tracksFor/:id', async (req, res) => {
                 creatorId: id,
             },
         });
-        res.json(tracks)
+        const tracknames = tracks.map(track => track.name);
+        res.json(tracknames)
     } catch (err) {
         console.error(err.message);
         res.sendStatus(503);

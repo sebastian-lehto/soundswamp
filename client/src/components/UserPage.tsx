@@ -8,11 +8,42 @@ const UserPage: React.FC = () => {
   const { id } = useParams();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [user, setUser] = useState<User>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const token: string = localStorage.getItem("token") || "";
 
-  useEffect(() => {
-    setTracks([]);
+  const fetchTracks = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`http://localhost:5000/tracks/tracklist/${id}`, {
+        headers: { 'Authorization': token }
+      });
+      const trackNames: string[] = await res.json();
+      const trackPromises = trackNames.map(async (trackname) => {
+        const blobRes = await fetch(`http://localhost:5000/tracks/track?track=${trackname}`, {
+          headers: { 'Authorization': token },
+        });
+        const trackBlob = await blobRes.blob();
+        return {
+          id: Date.now() + Math.random(), // Temporary ID generation
+          file: URL.createObjectURL(trackBlob),
+          isPlaying: false,
+          name: trackname
+        } as Track;
+      });
+      const trackObjs = await Promise.all(trackPromises);
+      setTracks([]);
+      setTracks(trackObjs);
+    } catch (err) {
+      setError('Failed to load tracks.');
+      console.error('Error occurred', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetch(`http://localhost:5000/users/user/${id}`, {
       headers: { 'Authorization': token }
     })
@@ -22,31 +53,16 @@ const UserPage: React.FC = () => {
       })
       .catch(err => console.log(err.message))
 
-    fetch(`http://localhost:5000/tracks/tracksFor/${id}`, {
-      headers: { 'Authorization': token }
-    })
-      .then(res => res.json())
-      .then(data => {
-        data.forEach((track: Track) => {
-          fetch(`http://localhost:5000/tracks/track?track=${track.name}`, {
-            headers: { 'Authorization': token },
-          })
-            .then(res => res.blob())
-            .then(trackBlob => {
-              const objectURL = URL.createObjectURL(trackBlob);
-              const newTrack: Track = { id: Date.now(), file: objectURL, isPlaying: false, name: track.name }
-              setTracks(tracks => [newTrack, ...tracks]);
-            })
-        });
-      })
-      .catch(err => console.log(err.message))
+    fetchTracks();
   }, []);
 
   return (
     <div className="App">
       <h1>User: {user?.username}</h1>
       <div className='tracklist'>
-        <TrackList tracks={tracks} setTracks={setTracks} />
+        {loading && <div>Loading tracks...</div>}
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {!loading && !error && <TrackList tracks={tracks} setTracks={setTracks} />}
       </div>
     </div>
   )

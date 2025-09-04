@@ -1,21 +1,35 @@
 import React from "react";
-import { FileUploader } from "react-drag-drop-files";
+import Dropzone from "react-dropzone";
 
 interface Props {
-    handleChange: any;
+    handleChange: (fileList: FileList) => Promise<void>;
 }
 
-const fileTypes = ["MP3", "WAV"]
+const fileTypes = [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a"];
 
 const AudioUploader: React.FC<Props> = ({handleChange}) => {
     return (
         <div className='fileuploader'>
-        <FileUploader
-          multiple={true}
-          handleChange={handleChange}
-          name="file"
-          types={fileTypes}
-        />
+        <Dropzone
+          onDrop={(acceptedFiles) => handleChange(acceptedFiles as unknown as FileList)}
+          accept={{ 'audio/*': fileTypes }}
+          multiple={false}
+        >
+          {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => {
+          const additionalClass = isDragAccept ? "accept" : isDragReject ? "reject" : "";
+
+          return (
+            <div
+              {...getRootProps({
+                className: `dropzone ${additionalClass}`,
+              })}
+            >
+              <input {...getInputProps()} />
+              <p>Drag and drop a file or click to select</p>
+            </div>
+          );
+        }}
+        </Dropzone>
       </div>
     )
 }
