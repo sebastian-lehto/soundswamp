@@ -14,14 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
       - name: Create .env file for Docker Compose
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env.ci
@@ -31,23 +23,23 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.ci
 
       - name: Build and start containers
-        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build
 
       - name: Wait for services to be ready
         run: |
           echo "Waiting for server and client to be ready..."
           sleep 20
-          docker-compose --env-file .env.ci -f docker-compose.ci.yaml ps
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml ps
 
       - name: Check running containers
-        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml ps
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml ps
 
       - name: Debug client container
-        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client sh -c "ls node_modules/cypress"
-  
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client sh -c "ls node_modules/cypress"
+
       - name: Run Cypress tests
-        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client npx cypress run --headless --browser chrome
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T client npx cypress run --headless --browser chrome
 
       - name: Stop containers
         if: always()
-        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml down
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml down
