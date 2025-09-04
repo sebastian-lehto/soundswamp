@@ -40,8 +40,7 @@ jobs:
           docker-compose --env-file .env.ci -f docker-compose.ci.yaml ps
 
       - name: Run Cypress tests
-        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml run --rm \
-          --entrypoint "" client npx cypress run --config-file cypress.config.ts
+        run: docker-compose --env-file .env.ci -f docker-compose.ci.yaml run --rm --entrypoint "" client npx cypress run --config-file cypress.config.ts
 
 
       - name: Stop containers
