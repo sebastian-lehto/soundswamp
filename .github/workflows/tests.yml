@@ -28,7 +28,7 @@ jobs:
       - name: Run Cypress tests
         run: |
           docker compose --env-file .env.ci -f docker-compose.ci.yaml run --rm client sh -c \
-          "npx wait-on http://server:5000 && npx cypress run --headless --browser chrome"
+          "npx cypress run --headless --browser chrome"
 
       - name: Stop containers
         if: always()
