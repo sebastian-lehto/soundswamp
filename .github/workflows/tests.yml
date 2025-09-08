@@ -25,12 +25,6 @@ jobs:
       - name: Build and start server & database containers
         run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server db
 
-      - name: Wait for services to be ready
-        run: |
-          echo "Waiting for server and database to be ready..."
-          sleep 20
-          docker compose --env-file .env.ci -f docker-compose.ci.yaml logs server
-
       - name: Run Cypress tests in official Docker image
         run: |
           docker run --rm \
