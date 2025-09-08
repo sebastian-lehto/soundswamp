@@ -27,7 +27,6 @@ jobs:
 
       - name: Run Cypress tests
         run: |
-          docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e run --rm client sh -c \
           npx cypress run --headless --browser chrome --no-sandbox
 
       - name: Stop containers
