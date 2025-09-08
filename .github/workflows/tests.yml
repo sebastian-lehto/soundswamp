@@ -25,17 +25,10 @@ jobs:
       - name: Build and start server & database containers
         run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server db
 
-      - name: Run Cypress tests in official Docker image
+      - name: Run Cypress tests
         run: |
-          docker run --rm \
-            -v $PWD/client:/e2e \
-            -w /e2e \
-            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-            -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-            -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
-            cypress/included:14.5.4
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml run --rm client sh -c \
+          "npx wait-on http://server:5000 && npx cypress run --headless --browser chrome"
 
       - name: Stop containers
         if: always()
