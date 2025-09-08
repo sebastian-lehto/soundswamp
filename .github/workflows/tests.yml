@@ -11,9 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose curl
+
+      # 3️⃣ Create .env file from GitHub Secrets
       - name: Create .env file for Docker Compose
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env.ci
@@ -21,25 +29,46 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env.ci
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.ci
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.ci
+          echo "NODE_ENV=development" >> .env.ci
 
-      - name: Build and start server & database containers
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server db
+      # 4️⃣ Build and start containers
+      - name: Build and start containers
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e up -d --build --force-recreate
 
+      # 5️⃣ Wait for Postgres to be ready
+      - name: Wait for Postgres
+        run: |
+          echo "Waiting for Postgres to be ready..."
+          for i in {1..30}; do
+            if docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T db pg_isready -U $POSTGRES_USER; then
+              echo "Postgres is ready!"
+              break
+            fi
+            sleep 2
+          done
+
+      # 6️⃣ Wait for server to be ready and generate Prisma client
+      - name: Wait for server
+        run: |
+          echo "Generating Prisma client..."
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T server npx prisma generate
+
+          echo "Waiting for server to start..."
+          for i in {1..30}; do
+            if docker compose --env-file .env.ci -f docker-compose.ci.yaml exec -T server sh -c "curl -f http://localhost:5000"; then
+              echo "Server is up!"
+              break
+            fi
+            sleep 2
+          done
+
+      # 7️⃣ Run Cypress tests
       - name: Run Cypress tests
         run: |
-          docker run --rm \
-            --network e2e_default \
-            -v $PWD/client:/e2e \
-            -w /e2e \
-            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-            -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-            -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
-            cypress/included:14.5.4 \
-            sh -c "npx cypress run --headless --browser chrome"
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e run --rm client sh -c \
+            "npx wait-on http://server:5000 && npx cypress run --headless --browser chrome"
 
-
+      # 8️⃣ Stop containers
       - name: Stop containers
         if: always()
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml down
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e down
