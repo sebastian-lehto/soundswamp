@@ -29,7 +29,7 @@ jobs:
         run: |
           echo "Waiting for server and database to be ready..."
           sleep 40
-          docker compose --env-file .env.ci -f docker-compose.ci.yaml ps
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml logs server
 
       - name: Run Cypress tests in official Docker image
         run: |
