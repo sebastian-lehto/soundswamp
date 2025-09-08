@@ -19,6 +19,8 @@ services:
       CHOKIDAR_USEPOLLING: true
     ports:
       - "3000:3000"
+    stdin_open: true      # keep STDIN open
+    tty: true           # allocate a pseudo-TTY
     command: tail -f /dev/null   # keep container alive for CI
     depends_on:
       - server

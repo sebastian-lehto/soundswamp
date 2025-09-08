@@ -23,7 +23,7 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.ci
 
       - name: Build and start server & database containers
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server client db
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server db
 
       - name: Run Cypress tests
         run: |
