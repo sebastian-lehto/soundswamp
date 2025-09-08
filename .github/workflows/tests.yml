@@ -37,7 +37,7 @@ jobs:
             -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
             -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
             cypress/included:14.5.4 \
-            sh -c "npx cypress run --headless --browser chrome --no-sandbox"
+            npx cypress run --headless --browser chrome --no-sandbox
 
       - name: Stop containers
         if: always()
