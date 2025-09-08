@@ -28,7 +28,7 @@ jobs:
       - name: Wait for services to be ready
         run: |
           echo "Waiting for server and database to be ready..."
-          sleep 40
+          sleep 20
           docker compose --env-file .env.ci -f docker-compose.ci.yaml logs server
 
       - name: Run Cypress tests in official Docker image
