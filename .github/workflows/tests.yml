@@ -28,7 +28,7 @@ jobs:
       - name: Run Cypress tests
         run: |
           docker run --rm \
-            --network ${{ github.workflow }}_default \
+            --network e2e_default \
             -v $PWD/client:/e2e \
             -w /e2e \
             -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
