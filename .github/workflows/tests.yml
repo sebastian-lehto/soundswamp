@@ -27,17 +27,8 @@ jobs:
 
       - name: Run Cypress tests
         run: |
-          docker run --rm \
-            --network host \
-            -v $PWD/client:/e2e \
-            -w /e2e \
-            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-            -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-            -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
-            cypress/included:14.5.4 \
-            npx cypress run --headless --browser chrome --no-sandbox
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e run --rm client sh -c \
+          npx cypress run --headless --browser chrome --no-sandbox
 
       - name: Stop containers
         if: always()
