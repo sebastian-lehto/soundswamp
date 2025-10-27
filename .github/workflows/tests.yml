@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Create .env file for Docker Compose
         run: |
@@ -22,10 +21,16 @@ jobs:
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.ci
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.ci
 
-      - name: Build and start server & database containers
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build server db
+      - name: Build and start all containers
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e up -d --build client server db
 
-      - name: Run Cypress tests
+      - name: Wait for app to be ready
+        run: |
+          echo "Waiting for client to be ready..."
+          sleep 20
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e ps
+
+      - name: Run Cypress tests inside client container
         run: |
           docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e exec -T client sh -c "\
             npx cypress run --headless --browser chrome --no-sandbox \
@@ -33,4 +38,4 @@ jobs:
 
       - name: Stop containers
         if: always()
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml down
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e down
