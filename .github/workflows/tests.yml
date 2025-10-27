@@ -33,7 +33,7 @@ jobs:
       - name: Run Cypress tests inside client container
         run: |
           docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e exec -T client sh -c "\
-            npx cypress run --headless --browser chrome --no-sandbox \
+            npx cypress run --headless --browser chrome -- --no-sandbox \
           "
 
       - name: Stop containers
