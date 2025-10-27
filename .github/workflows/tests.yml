@@ -26,14 +26,19 @@ jobs:
 
       - name: Wait for app to be ready
         run: |
-          echo "Waiting for client to be ready..."
-          sleep 20
-          docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e ps
+          for i in {1..20}; do
+            if curl -s http://localhost:4000 > /dev/null; then
+              echo "✅ Server is up!"
+              break
+            fi
+            echo "Waiting for server..."
+            sleep 5
+          done
 
-      - name: Run Cypress tests inside client container
+      - name: Run Cypress tests
         run: |
           docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e exec -T client sh -c "\
-            npx cypress run --headless --browser chrome -- --no-sandbox \
+            npx cypress run --headless --browser chrome \
           "
 
       - name: Stop containers
