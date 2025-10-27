@@ -32,9 +32,7 @@ jobs:
 
       - name: Run Cypress tests
         run: |
-          docker compose --env-file .env.ci -f docker-compose.ci.yaml --project-name e2e exec -T client sh -c "\
-            npx cypress run --headless --browser chrome \
-          "
+          docker compose --env-file .env.ci -f docker-compose.ci.yaml run --rm client npx cypress run --headless --browser chrome
 
       - name: Stop containers
         if: always()
