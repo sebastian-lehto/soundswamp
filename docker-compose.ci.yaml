@@ -19,6 +19,17 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    env_file: .env.ci
+    command: npm run start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
   client:
     image: cypress/included:15.1.0
     working_dir: /e2e
@@ -26,9 +37,9 @@ services:
       - ./client:/e2e
     env_file: .env.ci
     depends_on:
-      - server
+      - frontend
     entrypoint: ""
-    command: tail -f /dev/null  # keep container running until tests start
+    command: tail -f /dev/null
 
 volumes:
   pgdata:

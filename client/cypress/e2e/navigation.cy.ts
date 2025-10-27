@@ -1,5 +1,5 @@
 describe('template spec', () => {
   it('passes', () => {
-    cy.visit('http://client:3000/')
+    cy.visit('http://frontend:3000/')
   })
 })
