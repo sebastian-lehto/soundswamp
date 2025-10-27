@@ -22,7 +22,7 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.ci
 
       - name: Build and start all containers
-        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build db server frontend
+        run: docker compose --env-file .env.ci -f docker-compose.ci.yaml up -d --build client db server frontend
 
       - name: Wait for app to be ready
         run: |
