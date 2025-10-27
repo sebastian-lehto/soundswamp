@@ -38,8 +38,6 @@ services:
     env_file: .env.ci
     depends_on:
       - frontend
-    entrypoint: ""
-    command: tail -f /dev/null
 
 volumes:
   pgdata:
